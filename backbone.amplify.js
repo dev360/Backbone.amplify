@@ -1,8 +1,16 @@
 /**
- * Backbone localStorage Adapter v1.0
- * https://github.com/jeromegn/Backbone.localStorage
+ * Backbone amplify storage Adapter
  *
- * Date: Sun Aug 14 2011 09:53:55 -0400
+ * Localstorage with cross-browser fallback
+ *
+ * https://github.com/dev360/Backbone.amplify
+ *
+ * based on work by
+ * https://github.com/jeromegn/Backbone.localStorage
+ * 
+ * 
+ *
+ * Date: Thu Sept 1, 2011
  */
 
 // A simple module to replace `Backbone.sync` with *localStorage*-based
@@ -73,18 +81,9 @@ _.extend(Store.prototype, {
 });
 
 
+defaultSync = Backbone.sync;
 
-// Override `Backbone.sync` to use delegate to the model or collection's
-// *localStorage* property, which should be an instance of `Store`.
-Backbone.sync = function(method, model, options, error) {
-
-  // Backwards compatibility with Backbone <= 0.3.3
-  if (typeof options == 'function') {
-    options = {
-      success: options,
-      error: error
-    };
-  }
+amplifySync = function(method, model, options, error) {
 
   var resp;
   var store = model.localStorage || model.collection.localStorage;
@@ -103,3 +102,16 @@ Backbone.sync = function(method, model, options, error) {
   }
 };
 
+
+Backbone.sync = function(method, model, options) { 
+  
+  if(typeof(model.localStorage) !== 'undefined' || 
+      (typeof(model.collection) !== 'undefined' && typeof(model.collection.localStorage) !== 'undefined'))
+  {
+     return amplifySync(method, model, options);
+  }
+  else
+  {
+    return defaultSync(method, model, options);
+  }
+};
