@@ -2,7 +2,7 @@ $(document).ready(function() {
     module("localStorage");
 
     var Library = Backbone.Collection.extend({
-        localStorage: new window.Store("libraryStore1")
+      localStorage: new window.Store("libraryStore")
         
         // is the problem with my library that is has no model reference?
     });
@@ -19,20 +19,28 @@ $(document).ready(function() {
     
     var killStorage = function (name) {
         
+      /*
+        localStorage.clear();
+
 
         for (var i = 0; i < localStorage.length; i++) {
             var key = localStorage.key(i);
             if (key.indexOf(name) !== -1) {
-                localStorage.removeItem(key);
+                delete localStorage;
             }
         }
+      */
             
     };
 
     // read from the library object that shouldn't exist when we start
     test("collection", function() {
+
         killStorage('libraryStore');
-        library.fetch();
+        library.each(function(book) {
+            book.destroy();
+        });
+
         equals(library.length, 0, 'empty read');
         
         library.create(attrs);
