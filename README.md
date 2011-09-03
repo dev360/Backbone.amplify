@@ -5,10 +5,11 @@ Full cross browser fall back (IE5 - w00t!) for backbone.js, courtesy of amplify.
 ## Usage
 
 Include Backbone.amplify after having included Backbone.js:
-    <script type="text/javascript" src="json2.js"></script>
-    <script type="text/javascript" src="backbone.js"></script>
-    <script type="text/javascript" src="amplify.store.js"></script>
-    <script type="text/javascript" src="backbone.amplify.js"></script>
+
+```<script type="text/javascript" src="json2.js"></script>
+<script type="text/javascript" src="backbone.js"></script>
+<script type="text/javascript" src="amplify.store.js"></script>
+<script type="text/javascript" src="backbone.amplify.js"></script>```
 
 Create your collections like so:
 
