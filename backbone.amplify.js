@@ -1,3 +1,5 @@
+(function(global) {
+
 /**
  * Backbone amplify storage Adapter
  *
@@ -7,8 +9,8 @@
  *
  * based on work by
  * https://github.com/jeromegn/Backbone.localStorage
- * 
- * 
+ *
+ *
  *
  * Date: Thu Sept 1, 2011
  */
@@ -29,7 +31,8 @@ function guid() {
 
 // Our Store is represented by a single JS object in *localStorage*. Create it
 // with a meaningful name, like the name you'd give a table.
-window.Store = function(name) {
+
+global.Store = function(name) {
   this.name = name;
   var store = amplify.store(this.name);
   this.records = (store && store.split(",")) || [];
@@ -103,9 +106,9 @@ amplifySync = function(method, model, options, error) {
 };
 
 
-Backbone.sync = function(method, model, options) { 
-  
-  if(typeof(model.localStorage) !== 'undefined' || 
+Backbone.sync = function(method, model, options) {
+
+  if(typeof(model.localStorage) !== 'undefined' ||
       (typeof(model.collection) !== 'undefined' && typeof(model.collection.localStorage) !== 'undefined'))
   {
      return amplifySync(method, model, options);
@@ -115,3 +118,5 @@ Backbone.sync = function(method, model, options) {
     return defaultSync(method, model, options);
   }
 };
+
+})(window);
