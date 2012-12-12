@@ -1,5 +1,3 @@
-(function(global) {
-
 /**
  * Backbone amplify storage Adapter
  *
@@ -19,6 +17,27 @@
 // persistence. Models are given GUIDS, and saved into a JSON object. Simple
 // as that.
 
+(function(global, factory) {
+
+  // Set up Backbone-relational appropriately for the environment.
+  if (typeof exports !== 'undefined') {
+    // Node/CommonJS
+    var Backbone  = require('backbone'),
+        _         = require('underscore'),
+        amplify   = require('amplify');
+    factory(exports, Backbone, _, amplify);
+  } else if (typeof define === 'function' && define.amd) {
+    // AMD
+    define(['exports', 'backbone', 'underscore', 'amplify'], function(exports, Backbone, _, amplify) {
+      return factory(exports, amplify, _, Backbone);
+    });
+  } else {
+    // Browser globals
+    factory(global, global.Backbone, global._, global.amplify);
+  }
+
+}(this, function(global, Backbone, _, amplify) {
+
 // Generate four random hex digits.
 function S4() {
    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -32,7 +51,7 @@ function guid() {
 // Our Store is represented by a single JS object in *localStorage*. Create it
 // with a meaningful name, like the name you'd give a table.
 
-global.Store = function(name) {
+var Store = function(name) {
   this.name = name;
   var store = amplify.store(this.name);
   this.records = (store && store.split(",")) || [];
@@ -118,5 +137,9 @@ Backbone.sync = function(method, model, options) {
     return defaultSync(method, model, options);
   }
 };
+
+global.Store = Store;
+
+return Store;
 
 })(window);
