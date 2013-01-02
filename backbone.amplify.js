@@ -28,9 +28,7 @@
     factory(exports, Backbone, _, amplify);
   } else if (typeof define === 'function' && define.amd) {
     // AMD
-    define(['exports', 'backbone', 'underscore', 'amplify'], function(exports, Backbone, _, amplify) {
-      return factory(exports, amplify, _, Backbone);
-    });
+    define(['exports', 'backbone', 'underscore', 'amplify'], factory);
   } else {
     // Browser globals
     factory(global, global.Backbone, global._, global.amplify);
@@ -142,4 +140,4 @@ global.Store = Store;
 
 return Store;
 
-})(window);
+}));
