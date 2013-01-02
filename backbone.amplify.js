@@ -7,8 +7,8 @@
  *
  * based on work by
  * https://github.com/jeromegn/Backbone.localStorage
- * 
- * 
+ *
+ *
  *
  * Date: Thu Sept 1, 2011
  */
@@ -16,6 +16,25 @@
 // A simple module to replace `Backbone.sync` with *localStorage*-based
 // persistence. Models are given GUIDS, and saved into a JSON object. Simple
 // as that.
+
+(function(global, factory) {
+
+  // Set up Backbone-relational appropriately for the environment.
+  if (typeof exports !== 'undefined') {
+    // Node/CommonJS
+    var Backbone  = require('backbone'),
+        _         = require('underscore'),
+        amplify   = require('amplify');
+    factory(exports, Backbone, _, amplify);
+  } else if (typeof define === 'function' && define.amd) {
+    // AMD
+    define(['exports', 'backbone', 'underscore', 'amplify'], factory);
+  } else {
+    // Browser globals
+    factory(global, global.Backbone, global._, global.amplify);
+  }
+
+}(this, function(global, Backbone, _, amplify) {
 
 // Generate four random hex digits.
 function S4() {
@@ -29,7 +48,8 @@ function guid() {
 
 // Our Store is represented by a single JS object in *localStorage*. Create it
 // with a meaningful name, like the name you'd give a table.
-window.Store = function(name) {
+
+var Store = function(name) {
   this.name = name;
   var store = amplify.store(this.name);
   this.records = (store && store.split(",")) || [];
@@ -103,9 +123,9 @@ amplifySync = function(method, model, options, error) {
 };
 
 
-Backbone.sync = function(method, model, options) { 
-  
-  if(typeof(model.localStorage) !== 'undefined' || 
+Backbone.sync = function(method, model, options) {
+
+  if(typeof(model.localStorage) !== 'undefined' ||
       (typeof(model.collection) !== 'undefined' && typeof(model.collection.localStorage) !== 'undefined'))
   {
      return amplifySync(method, model, options);
@@ -115,3 +135,9 @@ Backbone.sync = function(method, model, options) {
     return defaultSync(method, model, options);
   }
 };
+
+global.Store = Store;
+
+return Store;
+
+}));
